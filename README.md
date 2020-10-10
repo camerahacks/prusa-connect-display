@@ -35,4 +35,4 @@ Python RPi.GPIO
 
 ## Things to be aware of
 
-This script has very little error handling. For instance
+This script has very little error handling. For instance there is no safeguard if you enter the wrong IP address. The script just won't work. There are also some timing issues since the script is polling the printer at regular intervals. Just don'r go crazy clicking buttons :)
