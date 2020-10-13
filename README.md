@@ -13,7 +13,8 @@ If you would like to read some more about cameras and photography, check out my 
 
 ## Support
 
-Currently it is setup to worth with Adafruit's Mini TFT Dsiplay, but it can work with any of their TFT displays
+```prusa-connect-local.py``` Currently it is setup to worth with Adafruit's Mini TFT Dsiplay, but it can work with any of their TFT displays
+```inky-phat-prusa-mini.py``` Supports the Inky pHAT e-ink display
 
 Make sure to edit the information block below before running the script
 
@@ -27,12 +28,6 @@ PRINTER='PRUSA Mini'
 
 So far, only the ```telemetry``` api is functional on the Prusa Mini
 
-## Dependencies
-
-Adafruit driver (Python3)
-Python Requests
-Python RPi.GPIO
-
 ## Things to be aware of
 
-This script has very little error handling. For instance there is no safeguard if you enter the wrong IP address. The script just won't work. There are also some timing issues since the script is polling the printer at regular intervals. Just don'r go crazy clicking buttons :)
+These script have very little error handling. For instance there is no safeguard if you enter the wrong IP address. The script just won't work. There are also some timing issues on the displays that have built in buttons since the script is polling the printer at regular intervals. Just don't go crazy clicking buttons :)
