@@ -19,7 +19,7 @@ GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP) # Top Button
 GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP) # Bottom Button
 GPIO.setup(22, GPIO.OUT) # Backligh IO
 
-# Configuration for CS and DC pins (these are FeatherWing defaults on M0/M4):
+# Configuration for CS and DC pins:
 cs_pin = digitalio.DigitalInOut(board.CE0)
 dc_pin = digitalio.DigitalInOut(board.D25)
 reset_pin = None
@@ -110,9 +110,11 @@ def button_callback(channel):
 		#GPIO.output(22, 0) # Set Backlight to LOW
 		display_jobinfo()
 
-def request_action():
+def display_progress(channel):
 
 	global mode
+
+	mode = 'progress'
 
 	while mode == 'progress':
 
@@ -123,18 +125,20 @@ def request_action():
 
 		# Draw a black filled box to clear the image.
 		draw.rectangle((0, 0, width, height), outline=0, fill=0)
+
+		# Send request to the printer
+		response = telemetry()
 		
 		# Send request to the printer
-		r = requests.get(PROTOCOL+IP+':'+PORT+ENDPOINT)
+		# r = requests.get(PROTOCOL+IP+':'+PORT+ENDPOINT)
 
-		# Process the response 
-		if r.status_code == 200: # OK
-			response = r.json()
+		if isinstance(response, int) != True :
 			status = "Connected"
 			btemp = response["temp_bed"] # Bed temp
 			ntemp = response["temp_nozzle"] # Nozzle temp
 			btemp = 'Bed: '+str(btemp)+' C' # Bed temp
 			ntemp = 'Nozzle: '+str(ntemp)+' C' # Nozzle temp
+
 			
 			# Check if progress is being reported.
 			# API only reports progress when printing is in progress
@@ -176,11 +180,10 @@ def request_action():
 			pbar_bottom = bottom-outline
 			draw.rectangle((pbar_x, pbar_y, pbar_width, pbar_bottom), outline=0, fill=(255,0,0))
 
-		else:
-			# Display error message
-			print(r.status_code)
+			disp.image(image, rotation)
 
-		disp.image(image, rotation)
+		else:
+			display_error(response)
 
 		time.sleep(10)
 	
@@ -190,6 +193,7 @@ def display_jobinfo(channel):
 
 	mode = 'jobinfo'
 
+	# Send request to the printer
 	response = telemetry()
 
 	print("Mode: "+mode)
@@ -214,18 +218,26 @@ def display_jobinfo(channel):
 		draw.text((x, y), material, font=font, fill="#FFFFFF")
 		y += font.getsize(material)[1]
 		draw.text((x, y), filename, font=font, fill="#FFFFFF")
+		disp.image(image, rotation)
 	else:
-		errocode = "Error: "+str(response)
-		y = top
-		draw.text((x, y), PRINTER, font=font, fill="#FF0000")
-		y += font.getsize(PRINTER)[1]
-		draw.text((x, y), errocode, font=font, fill="#FFFFFF")
+		display_error(response)
+		
+
+def display_error(response):
+
+	errocode = "Error: "+str(response)
+	y = top
+	draw.text((x, y), PRINTER, font=font, fill="#FF0000")
+	y += font.getsize(PRINTER)[1]
+	draw.text((x, y), errocode, font=font, fill="#FFFFFF")
 
 	disp.image(image, rotation)
 
+	return 0
 
-GPIO.add_event_detect(23, GPIO.FALLING, callback=button_callback, bouncetime=200) # Setup event on pin 23 rising edge
-GPIO.add_event_detect(24, GPIO.FALLING, callback=display_jobinfo, bouncetime=200) # Setup event on pin 24 rising edge
+
+GPIO.add_event_detect(23, GPIO.FALLING, callback=display_progress, bouncetime=200) # Setup event on pin 23 falling edge
+GPIO.add_event_detect(24, GPIO.FALLING, callback=display_jobinfo, bouncetime=200) # Setup event on pin 24 falling edge
 
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
