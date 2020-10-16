@@ -5,13 +5,16 @@
 # Use at your own risk
 ##############
 import time
+import datetime
+import sys
+import getopt
 import requests
 from inky import InkyPHAT
 from PIL import Image, ImageFont, ImageDraw
 from font_fredoka_one import FredokaOne
 
 PRINTER="PRUSA Mini"
-REFRESH=90
+REFRESH=300
 PROTOCOL='http://'
 IP='192.168.1.14'
 PORT='80'
@@ -19,9 +22,32 @@ ENDPOINT='/api/telemetry'
 
 padding = 5
 
+argv = sys.argv[1:]
 
-inky_display = InkyPHAT("red")
+if len(argv) == 0:
+	inky_color = "red"
+else:
+	try:
+		opts, args = getopt.getopt(argv,"hc:",["color="])
+	except getopt.GetoptError:
+		print('paramerters: -c <color> or --color <color>')
+		sys.exit(2)
+	for opt, arg in opts:
+		if opt == '-h':
+			print(' -c <color> or --color <color>')
+			print('Possible colors: red, yellow, or black.')
+			print('Choose the color that matches your screen.')
+			sys.exit()
+		elif opt in ("-c", "--color"):
+			inky_color = arg
+
+
+inky_display = InkyPHAT(inky_color)
 inky_display.set_border(inky_display.WHITE)
+
+# Convert color to variable value
+inky_color = "inky_display."+inky_color.upper()
+inky_color = eval(inky_color)
 
 # Create a blank image the size of the display
 # "P" Mode - 8-bit pixels, mapped to any other mode using a color palette
@@ -62,19 +88,30 @@ def show_screen(response):
 		if "progress" in response:
 			progress = response["progress"]
 		else:
-			progress = 80
+			progress = 100
 
 		if "time_est" in response:
 			esttime = response["time_est"]
+			currtime = datetime.datetime.today()
+			esttime = currtime + datetime.timedelta(seconds=int(esttime))
+			esttime = esttime.strftime("%H:%M")
 		else:
 			esttime = "--:--"
+
+	print(esttime)
+
+	# Create a blank image the size of the display
+	# "P" Mode - 8-bit pixels, mapped to any other mode using a color palette
+	img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
+	draw = ImageDraw.Draw(img)
 
 	font = ImageFont.truetype(FredokaOne, 22)
 
 	y = padding
 
 	# Add the printer name to the canvas
-	draw.text((10, y), PRINTER, inky_display.RED, font)
+	#draw.text((10, y), PRINTER, inky_display.RED, font)
+	draw.text((10, y), PRINTER, inky_color, font)
 
 	# Find with of label, add label's initial x and add more padding
 	progress_x = font.getsize(PRINTER)[0]+10+20
@@ -98,11 +135,11 @@ def show_screen(response):
 
 	font = ImageFont.truetype(FredokaOne, 22)
 
-	draw.text((20, y), bedtemp, inky_display.RED, font)
+	draw.text((20, y), bedtemp, inky_color, font)
 
-	draw.text((75, y), nozzletemp, inky_display.RED, font)
+	draw.text((75, y), nozzletemp, inky_color, font)
 
-	draw.text((140, y), esttime, inky_display.RED, font)
+	draw.text((140, y), esttime, inky_color, font)
 
 	y += font.getsize(bedtemp)[1]+padding
 
@@ -117,12 +154,17 @@ def show_error(e):
 	
 	print(e)
 
+	# Create a blank image the size of the display
+	# "P" Mode - 8-bit pixels, mapped to any other mode using a color palette
+	img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
+	draw = ImageDraw.Draw(img)
+
 	font = ImageFont.truetype(FredokaOne, 22)
 	
 	y = padding
 
 	# Add the printer name to the canvas
-	draw.text((10, y), PRINTER, inky_display.RED, font)
+	draw.text((10, y), PRINTER, inky_color, font)
 
 	y += font.getsize(PRINTER)[1]+padding
 
