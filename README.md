@@ -56,3 +56,25 @@ You can use "black" on the red and yellow displays to make them refresh faster.
 
 
 ## Adafruit Mini PiTFT
+
+Follow the steps outlined in this article to install the necessary libraries: [Adafruit Mini PiTFT Python Setup](https://learn.adafruit.com/adafruit-mini-pitft-135x240-color-tft-add-on-for-raspberry-pi/python-setup)
+
+Use ```prusa-connect-local.py```
+
+If you have a different Adafruit TFT display, change the code block below.
+
+```
+disp = st7789.ST7789(
+    spi,
+    cs=cs_pin,
+    dc=dc_pin,
+    rst=reset_pin,
+    baudrate=BAUDRATE,
+    width=135,
+    height=240,
+    x_offset=53,
+    y_offset=40,
+)
+```
+
+Unlike the Inky pHAT script, there are no arguments/options for this script.
