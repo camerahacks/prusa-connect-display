@@ -43,6 +43,7 @@ Use ```inky-phat-prusa-mini.py```
 Either find the piece of code below and change the value to the correct color of display you have. Possible options are: "red", "yellow", and "black". The default color is "red"
 
 ```
+# Default inky color
 inky_color = "red"
 ```
 

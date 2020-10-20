@@ -20,26 +20,31 @@ IP='192.168.1.14'
 PORT='80'
 ENDPOINT='/api/telemetry'
 
+#default padding between 
 padding = 5
 
+# Default inky color
+inky_color = "red"
+
+# Get passed arguments
 argv = sys.argv[1:]
 
-if len(argv) == 0:
-	inky_color = "red"
-else:
-	try:
-		opts, args = getopt.getopt(argv,"hc:",["color="])
-	except getopt.GetoptError:
-		print('paramerters: -c <color> or --color <color>')
-		sys.exit(2)
-	for opt, arg in opts:
-		if opt == '-h':
-			print(' -c <color> or --color <color>')
-			print('Possible colors: red, yellow, or black.')
-			print('Choose the color that matches your screen.')
-			sys.exit()
-		elif opt in ("-c", "--color"):
-			inky_color = arg
+
+try:
+	opts, args = getopt.getopt(argv,"hc:r:",["color=", "refresh="])
+except getopt.GetoptError:
+	print('paramerters: -c <color> or --color <color>')
+	sys.exit(2)
+for opt, arg in opts:
+	if opt == '-h':
+		print(' -c <color> or --color <color>')
+		print('Possible colors: red, yellow, or black.')
+		print('Choose the color that matches your screen.')
+		sys.exit()
+	elif opt in ("-c", "--color"):
+		inky_color = arg
+	elif opt in ("-r", "--refresh"):
+		REFRESH = int(arg)
 
 
 inky_display = InkyPHAT(inky_color)
@@ -97,8 +102,6 @@ def show_screen(response):
 			esttime = esttime.strftime("%H:%M")
 		else:
 			esttime = "--:--"
-
-	print(esttime)
 
 	# Create a blank image the size of the display
 	# "P" Mode - 8-bit pixels, mapped to any other mode using a color palette
