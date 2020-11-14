@@ -19,6 +19,7 @@ PROTOCOL='http://'
 IP='192.168.1.14'
 PORT='80'
 ENDPOINT='/api/telemetry'
+ROTATION=0
 
 #default padding between 
 padding = 5
@@ -150,13 +151,13 @@ def show_screen(response):
 	pbar_height = inky_display.HEIGHT-padding
 	draw.rectangle([10, y, pbar_width, pbar_height], fill=inky_display.RED, outline=None)
 
+	img = img.rotate(ROTATION)
+
 	inky_display.set_image(img)
 	inky_display.show()
 
 def show_error(e):
 	
-	print(e)
-
 	# Create a blank image the size of the display
 	# "P" Mode - 8-bit pixels, mapped to any other mode using a color palette
 	img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
@@ -175,6 +176,8 @@ def show_error(e):
 
 	draw.text((10, y), e, inky_display.BLACK, font)
 
+	img = img.rotate(ROTATION)
+
 	inky_display.set_image(img)
 	
 	inky_display.show()
@@ -190,6 +193,8 @@ while True:
 		show_error("Http Error:",httpCode)
 	except requests.exceptions.RequestException as e:
 		# catastrophic error. bail.
+		error = "Connection Error"
+		show_error(error)
 		raise SystemExit(e)
 	else:
 		show_screen(telemetry)

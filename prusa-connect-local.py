@@ -14,7 +14,7 @@ import board
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
 
-GPIO.setwarnings(True) # Ignore warning for now
+GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP) # Top Button
 GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP) # Bottom Button
 GPIO.setup(22, GPIO.OUT) # Backligh IO
@@ -56,7 +56,7 @@ font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)
 height = disp.width  # we swap height/width to rotate it to landscape!
 width = disp.height
 image = Image.new("RGB", (width, height))
-rotation = 90
+rotation = 270
 
 # Get drawing object to draw on image.
 draw = ImageDraw.Draw(image)
@@ -127,7 +127,16 @@ def display_progress(channel):
 		draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
 		# Send request to the printer
-		response = telemetry()
+		try:
+			response = telemetry()
+		except requests.exceptions.Timeout as e:
+			error = "Connection Timed Out"
+			display_error(error)
+		except requests.exceptions.HTTPError as httpCode:
+			display_error("Http Error:",httpCode)v
+		except requests.exceptions.RequestException as e:
+			# catastrophic error. bail.
+			raise SystemExit(e)
 		
 		# Send request to the printer
 		# r = requests.get(PROTOCOL+IP+':'+PORT+ENDPOINT)
@@ -181,9 +190,6 @@ def display_progress(channel):
 			draw.rectangle((pbar_x, pbar_y, pbar_width, pbar_bottom), outline=0, fill=(255,0,0))
 
 			disp.image(image, rotation)
-
-		else:
-			display_error(response)
 
 		time.sleep(10)
 	
