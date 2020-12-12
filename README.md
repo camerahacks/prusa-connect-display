@@ -38,6 +38,8 @@ Script is set to run forever.
 
 Follow the steps outlined in this article to install the necessary libraries: [Getting Started with Inky pHAT](https://shop.pimoroni.com/products/inky-phat?variant=12549254217811)
 
+![Inky pHAT Raspberry Pi Display]("Prusa Raspberry Pi e-ink Display_01.jpg")
+
 Use ```inky-phat-prusa-mini.py```
 
 Either find the piece of code below and change the value to the correct color of display you have. Possible options are: "red", "yellow", and "black". The default color is "red"
