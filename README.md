@@ -38,7 +38,7 @@ Script is set to run forever.
 
 Follow the steps outlined in this article to install the necessary libraries: [Getting Started with Inky pHAT](https://shop.pimoroni.com/products/inky-phat?variant=12549254217811)
 
-![Inky pHAT Raspberry Pi Display]("Prusa Raspberry Pi e-ink Display_01.jpg")
+![Prusa Mini Raspberry Pi Inky pHAT](Prusa%20Raspberry%20Pi%20e-ink%20Display_01.jpg)
 
 Use ```inky-phat-prusa-mini.py```
 
