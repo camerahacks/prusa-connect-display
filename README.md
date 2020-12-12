@@ -40,6 +40,8 @@ Follow the steps outlined in this article to install the necessary libraries: [G
 
 ![Prusa Mini Raspberry Pi Inky pHAT](images/Prusa%20Raspberry%20Pi%20e-ink%20Display_01.jpg)
 
+![Prusa Mini Raspberry Pi Inky pHAT](images/Prusa%20Raspberry%20Pi%20e-ink%20Display_02.jpg)
+
 Use ```inky-phat-prusa-mini.py```
 
 Either find the piece of code below and change the value to the correct color of display you have. Possible options are: "red", "yellow", and "black". The default color is "red"
