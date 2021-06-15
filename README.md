@@ -13,12 +13,12 @@ If you would like to read some more about cameras and photography, check out my 
 
 ## Support
 
-```prusa-connect-local.py``` Currently it is setup to worth with Adafruit's Mini TFT Dsiplay, but it can work with any of their TFT displays.  
+```prusa-connect-local.py``` Currently it is setup to work with Adafruit's Mini TFT Dsiplay, but it can work with any of their TFT displays.  
 ```inky-phat-prusa-mini.py``` Supports the Inky pHAT e-ink display.
 
 Make sure to edit the information block below before running the script.
 
-```
+```python
 PROTOCOL='http://'
 IP='192.168.1.14'
 PORT='80'
@@ -46,7 +46,7 @@ Use ```inky-phat-prusa-mini.py```
 
 Either find the piece of code below and change the value to the correct color of display you have. Possible options are: "red", "yellow", and "black". The default color is "red"
 
-```
+```python
 # Default inky color
 inky_color = "red"
 ```
@@ -68,7 +68,7 @@ Use ```prusa-connect-local.py```
 
 If you have a different Adafruit TFT display, change the code block below.
 
-```
+```python
 disp = st7789.ST7789(
     spi,
     cs=cs_pin,
