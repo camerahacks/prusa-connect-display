@@ -14,7 +14,7 @@ If you would like to read some more about cameras and photography, check out my 
 ## Support
 
 ```prusa-connect-local.py``` Currently it is setup to work with Adafruit's Mini TFT Dsiplay, but it can work with any of their TFT displays.  
-```inky-phat-prusa-mini.py``` Supports the Inky pHAT e-ink display.
+```inky-phat-prusa-mini.py``` Supports the Pimoroni's Inky pHAT e-ink display.
 
 Make sure to edit the information block below before running the script.
 
